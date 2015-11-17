@@ -1,0 +1,29 @@
+---
+- name: Create database for app
+  sudo: yes
+  sudo_user: postgres
+  postgresql_db: name={{ database_name }}
+
+- name: Create database user for app
+  sudo: yes
+  sudo_user: postgres
+  postgresql_user: db={{ database_name }}
+                   name={{ database_user }}
+                   password={{ database_password }}
+                   role_attr_flags=CREATEDB,NOSUPERUSER
+
+- name: Create shared config directory
+  file: path={{ app_path }}/shared/config state=directory
+
+- name: Copy database.yml to config
+  sudo: yes   # or chgrp will fail. For some reason, the setgid doesn't work here.
+  template: src=database.yml.j2 dest={{ app_path }}/shared/config/database.yml owner={{ deploy_user }} group=www-data mode=0640
+
+- name: Copy secret.yml to config
+  sudo: yes
+  template: src=secrets.yml.j2 dest={{ app_path }}/shared/config/secrets.yml owner={{ deploy_user }} group=www-data mode=0640
+
+- name: Copy nginx vhost config to sites-available
+  sudo: yes
+  template: src=app-vhost.nginx.j2 dest=/etc/nginx/sites-enabled/{{ app_domain }}
+  notify: restart_nginx

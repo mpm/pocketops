@@ -1,0 +1,23 @@
+---
+deploy_user: rails
+
+# password for the newly generated user, will be passed from the rake task
+#password:
+
+rbenv_makeopts: ""
+
+# Papertrail logging
+# e.g. @logs.papertrailapp.com:1234
+#papertrail_log_dest: "@logs.papertrailapp.com:46606"
+app_path: '/home/{{ deploy_user }}/apps/{{ app_name }}'
+
+releases_path: '{{ app_path }}/releases'
+shared_path: '{{ app_path }}/shared'
+
+database_host: localhost
+database_port: 5432
+database_name: '{{ app_name }}_{{ rails_env }}'
+
+database_user: '{{ app_name }}_{{ rails_env }}'
+database_password: "{{ lookup('password', inventory_dir + '/credentials/' + database_user + '.postgresql.txt length=20') }}"
+

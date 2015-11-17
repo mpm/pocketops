@@ -1,0 +1,24 @@
+- name: 'create {{ deploy_user }} user'
+  user: name={{ deploy_user }} comment="deploy user" generate_ssh_key=yes state=present password={{ password }} shell=/bin/bash
+
+- name: 'authorize my SSH key to access user {{ deploy_user }}'
+  authorized_key: user={{ deploy_user }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+- name: copy ssh_config so that github doesn't do host verification
+  action: copy src=ssh_config dest=~{{ deploy_user }}/.ssh/config owner={{ deploy_user }} group={{ deploy_user }}
+
+- name: add {{ deploy_user }} to sudoers
+  lineinfile: "dest=/etc/sudoers state=present line='{{ deploy_user }} ALL=(ALL:ALL) ALL'"
+
+- name: require password upon each invocation of sudo
+  lineinfile: "dest=/etc/sudoers state=present line='Defaults timestamp_timeout=0'"
+
+- name: create www-data group
+  group: name=www-data state=present
+
+- name: create apps directory owned by {{ deploy_user }}:www-data with setgid bit
+  # note: 2755 => 2=setgid, 7=owner rwx, 5=group rx, 5=other rx
+  file: name=~{{ deploy_user }}/apps state=directory owner={{ deploy_user }} group=www-data mode=2755
+
+- name: remove authorized_keys for root (specifically for DigitalOcean)
+  file: name=/root/.ssh/authorized_keys state=absent

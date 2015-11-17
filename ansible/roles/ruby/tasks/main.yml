@@ -1,0 +1,19 @@
+# Most of this borrowed from https://github.com/leucos/ansible-rbenv-playbook
+
+- name: Checks if target ruby is installed
+  shell: cd; bash -lc "rbenv versions | grep {{ ruby_version }} | tr '*' ' ' | sed -e 's/\s\+//' | cut -f1 -d' '"
+  # This is just a 'get' operation, so can't really change.
+  # The rc from this shell does indicate to ansible that it's changed, so let's suppress that.
+  # http://docs.ansible.com/playbooks_error_handling.html#overriding-the-changed-result
+  changed_when: False
+  register: ruby_is_installed
+
+- name: Install specified ruby version via rbenv
+  shell: cd; bash -lc "MAKEOPTS={{ rbenv_makeopts }} CONFIGURE_OPTS=--disable-install-rdoc rbenv install {{ ruby_version }}"
+  when: ruby_is_installed.stdout != ruby_version
+
+- name: Set global ruby version
+  shell: cd; bash -lc "rbenv global {{ ruby_version }}"
+
+- name: Install bundler gem
+  shell: cd; bash -lc "gem install bundle bundler"

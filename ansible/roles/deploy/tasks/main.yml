@@ -1,0 +1,67 @@
+---
+#- include_vars: ../../unicorn/defaults/main.yml
+#- include_vars: ../../sidekiq/defaults/main.yml
+
+- set_fact: this_release_path={{ releases_path }}/{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}
+
+- name: Create shared directories
+  file: path={{ shared_path }}/{{ item }} state=directory
+  with_items:
+    - log
+    - tmp
+    - vendor/bundle
+
+- name: Create new release dir
+  file: path={{ this_release_path }} state=directory
+
+- name: Update code
+  git: repo={{ git_url }} dest={{ this_release_path }} version={{ git_branch }} accept_hostkey=yes
+  register: git
+  #notify:
+  #  - restart sidekiq
+
+- name: Delete log directory
+  file: path={{ this_release_path }}/log state=absent
+
+- name: Symlink shared files
+  file: src={{ shared_path }}/{{ item }} dest={{ this_release_path }}/{{ item }} state=link force=yes
+  with_items:
+    - config/database.yml
+    - config/secrets.yml
+    #- config/unicorn.rb
+    - log
+    - tmp
+    - vendor/bundle
+
+- name: Install bundle
+  shell: '. ~/.bash_profile && bundle install --deployment --without="development test"'
+  args:
+    executable: /bin/bash
+    chdir: '{{ this_release_path }}'
+
+- name: Precompile assets
+  shell: '. ~/.bash_profile && bundle exec rake assets:precompile'
+  args:
+    executable: /bin/bash
+    chdir: '{{ this_release_path }}'
+  environment:
+    RAILS_ENV: '{{ rails_env }}'
+
+- name: Migrate database
+  shell: '. ~/.bash_profile && bundle exec rake db:migrate'
+  args:
+    executable: /bin/bash
+    chdir: '{{ this_release_path }}'
+  environment:
+    RAILS_ENV: '{{ rails_env }}'
+
+- name: Symlink new release
+  file: src={{ this_release_path }} dest={{ app_path }}/current state=link force=yes
+
+- name: Restart webserver
+  file: path={{ shared_path }}/tmp/restart.txt state=touch
+
+- name: Cleanup
+  shell: "ls -1t {{ releases_path }}|tail -n +{{ keep_releases + 1 }}|xargs rm -rf"
+  args:
+    chdir: '{{ releases_path }}'

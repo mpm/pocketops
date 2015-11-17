@@ -1,0 +1,8 @@
+---
+- hosts: all
+  vars_files:
+    - vars/defaults.yml
+  user: root
+  roles:
+    - create-deploy-user
+

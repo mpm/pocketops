@@ -1,0 +1,8 @@
+---
+- hosts: all
+  vars_files:
+    - vars/defaults.yml
+  remote_user: '{{ deploy_user }}'
+  sudo: no
+  roles:
+    - deploy

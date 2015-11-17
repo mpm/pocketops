@@ -1,0 +1,13 @@
+- hosts: all
+  vars_files:
+    - vars/defaults.yml
+  remote_user: "{{ deploy_user }}"
+  roles:
+    - linux-server
+    - ufw
+    - postgresql
+    - rbenv
+    - { role: ruby, tags: ['ruby'] }
+    #- { role: papertrail, tags: ['papertrail'] }
+    - nginx-passenger
+    - { role: app-vhost, tags: ['app-vhost'] }
