@@ -1,12 +1,5 @@
 #!/usr/bin/env ruby
 require 'pocketops'
 
-# The Ansible executable does not support giving the inventory list as a parameter.
-# It must either be in a text file or an executable file that returns json.
-# Attaching arguments to the exectable file is not supported either, so we use
-# this script as a bridge back to the rake task.
-# We need to switch back from the gem directory to the Rails project directory though
-# (hence the environment variable)
-#cd $POCKETOPS_PROJECT_PATH && bundle exec rake pops:inventory
 inventory = Pocketops::Inventory.new(Pocketops.config.hosts)
 puts inventory.to_json
