@@ -12,6 +12,10 @@ module Pocketops
     end
 
     def execute(playbook, options = {})
+      if options[:sudo_password]
+        options[:vars] ||= {}
+        options[:vars][:ansible_sudo_pass] = options[:sudo_password]
+      end
       command =
       ["POCKETOPS_PROJECT_PATH=#{Pocketops.config.root}",
        "ANSIBLE_CONFIG=#{File.join(playbooks_path, 'ansible.cfg')}",

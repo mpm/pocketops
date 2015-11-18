@@ -5,9 +5,14 @@ module Pocketops
       Pocketops::Commands::Deploy.run
     end
 
-    desc 'init', 'configure the specified remote server to run Rails'
+    desc 'init', 'create a deploy user and remove SSH access to root on remote server (run this once before you do anything else)'
     def init
-      Pocketops::Commands::Deploy.cold
+      Pocketops::Commands::Deploy.init
+    end
+
+    desc 'install', 'install packages and configure the remote server with Rails, Postgres, nginx and others (run \'pops deploy\' after this)'
+    def install
+      Pocketops::Commands::Deploy.install
     end
 
     desc 'config:add', 'set one or more config vars (alias for config:set)'
