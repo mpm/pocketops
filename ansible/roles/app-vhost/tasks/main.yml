@@ -23,6 +23,9 @@
   sudo: yes
   template: src=secrets.yml.j2 dest={{ app_path }}/shared/config/secrets.yml owner={{ deploy_user }} group=www-data mode=0640
 
+- name: Create .env file
+  template: src=dot-env.j2 dest={{ app_path }}/shared/.env
+
 - name: Copy nginx vhost config to sites-available
   sudo: yes
   template: src=app-vhost.nginx.j2 dest=/etc/nginx/sites-enabled/{{ app_domain }}
