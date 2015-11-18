@@ -1,25 +1,14 @@
 module Pocketops
   class CLI < Thor
-    desc 'deploy:action', 'Deploy the current project from git'
-    define_method 'deploy:action' do
-      Pocketops.ansible.execute('deploy')
+    desc 'deploy', 'deploy the Rails app to the remote server'
+    def deploy
+      Pocketops::Commands::Deploy.run
     end
 
-    #Usage: heroku config
-
-    #display the config vars for an app
-
-     #-s, --shell         # output config vars in shell format
-     #--json              # output config vars in json format
-     #-a, --app APP       # app to run command against
-     #-r, --remote REMOTE # git remote of app to run command against
-
-    #Additional commands, type "heroku help COMMAND" for more details:
-
-      #config:add                                #  set one or more config vars
-      #config:get KEY                            #  display a config value for an app
-      #config:set KEY1=VALUE1 [KEY2=VALUE2 ...]  #  set one or more config vars
-      #config:unset KEY1 [KEY2 ...]              #  unset one or more config vars
+    desc 'init', 'configure the specified remote server to run Rails'
+    def init
+      Pocketops::Commands::Deploy.cold
+    end
 
     desc 'config:add', 'set one or more config vars (alias for config:set)'
     define_method 'config:add' do |*keys|
