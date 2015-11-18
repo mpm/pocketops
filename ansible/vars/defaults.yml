@@ -19,5 +19,6 @@ database_port: 5432
 database_name: '{{ app_name }}_{{ rails_env }}'
 
 database_user: '{{ app_name }}_{{ rails_env }}'
+# FIXME: dont create database pw like this, or it will be the same for all deployments from this developer's machine
 database_password: "{{ lookup('password', inventory_dir + '/credentials/' + database_user + '.postgresql.txt length=20') }}"
 
