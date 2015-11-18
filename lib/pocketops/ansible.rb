@@ -11,33 +11,40 @@ module Pocketops
       end
     end
 
-    def execute(playbook)
+    def execute(playbook, options = {})
       command =
       ["POCKETOPS_PROJECT_PATH=#{Pocketops.config.root}",
        "ANSIBLE_CONFIG=#{File.join(playbooks_path, 'ansible.cfg')}",
        executable,
-       build_params,
+       build_params(options[:vars] || {}),
        "-i #{inventory}",
        File.join(playbooks_path, playbook.to_s + '.yml'),
-       '--check'].compact.join(' ')
-      result = `#{command}`
+       options[:check] ? '--check' : nil,
+      ].compact.join(' ')
+      result = `#{command}` #system(*command)
       if $?.exitstatus != 0
-        puts "ERROR running #{command}"
-        puts "Output:"
-        puts result
+        raise PocketopsError.new(
+          ['Error running Ansible.',
+           'Command line:',
+           command,
+           '',
+           "Exit status: #{$?}",
+           '',
+           'Output:',
+           "#{result}"].join("\n"))
       else
-        puts "OK."
+        return true, result
       end
     end
 
     def inventory
-      File.join(playbooks_path, 'inventory')
+      File.join(playbooks_path, '..', 'exe', 'pocketops-inventory')
     end
 
     private
 
-    def build_params
-      Pocketops.config.ansible_vars.map { |key, value| "-e #{key}='#{value}'" }.join(' ')
+    def build_params(vars = {})
+      Pocketops.config.ansible_vars.merge(vars).map { |key, value| "-e #{key}='#{value}'" }.join(' ')
     end
   end
 

@@ -14,7 +14,7 @@ module Pocketops
       end
       @settings = YAML.load_file(config_file)
       @ansible_vars = {
-        app_name: Rails.application.class.name.split('::').first.downcase,
+        app_name: guess_app_name,
         app_domain: find_setting('domain'),
         git_url: find_setting('git_url'),
         git_branch: find_setting('git_branch'),
@@ -33,7 +33,7 @@ module Pocketops
     end
 
     def root
-      Rails.root
+      Dir.pwd
     end
 
     def generate_user_password
@@ -45,8 +45,17 @@ module Pocketops
 
     private
 
+    def guess_app_name
+      application_file = File.join(root, 'config', 'application.rb')
+      if !File.exists?(application_file)
+        raise PocketopsError.new('Pocketops must be run inside a Rails application directory. Make sure config/application.rb exists in the current directory.')
+      else
+        File.readlines(application_file).grep(/^module/).first.split(' ')[1].downcase
+      end
+    end
+
     def find_setting(key)
-      @settings['environments'][environment].try(:[], key) || @settings[key]
+      (@settings['environments'][environment] || {})[:key] || @settings[key]
     end
   end
 
