@@ -1,0 +1,2 @@
+---
+dot_env_file: '{{ shared_path }}/.env'

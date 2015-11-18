@@ -1,0 +1,15 @@
+- name: Create .env placeholder
+  file: path={{ dot_env_file }} state=touch
+
+- name: Remove existing environment variable
+  lineinfile: dest={{ dot_env_file }} state=absent regexp="^{{ env_config_key }}="
+  when: ("{{ env_config_key }}" != "")
+
+- name: Add new environment variable
+  lineinfile: 'dest={{ dot_env_file }} state=present line="{{ env_config_key }}={{ env_config_value }}"'
+  when: ("{{ env_config_value }}" != "") and
+        ("{{ env_config_key }}" != "")
+
+- name: Retrieving all environment variables
+  fetch: src={{ dot_env_file }} dest={{ dot_env_tmp }} flat=yes
+
