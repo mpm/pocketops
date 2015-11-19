@@ -22,7 +22,7 @@ module Pocketops
        executable,
        build_params(options[:vars] || {}),
        "-i #{inventory}",
-       File.join(playbooks_path, playbook.to_s + '.yml'),
+       File.join(options[:path] || playbooks_path, playbook.to_s + '.yml'),
        options[:check] ? '--check' : nil,
       ].compact.join(' ')
       result = `#{command}` #system(*command)

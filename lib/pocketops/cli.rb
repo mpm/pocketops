@@ -15,6 +15,12 @@ module Pocketops
       Pocketops::Commands::Deploy.install
     end
 
+    # example: pops custom post_install/task
+    desc 'custom CUSTOMTASK', 'runs a custom task in config/pocketops/'
+    def custom(task)
+      Pocketops.ansible.execute("#{task}", path: File.join(Pocketops.config.root, 'config', 'pocketops'))
+    end
+
     desc 'config:add', 'set one or more config vars (alias for config:set)'
     define_method 'config:add' do |*keys|
       send('config:set', *keys)
