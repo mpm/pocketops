@@ -55,7 +55,7 @@ module Pocketops
     end
 
     def find_setting(key)
-      (@settings['environments'][environment] || {})[:key] || @settings[key]
+      (@settings['environments'][environment] || {})[key] || @settings[key] || (raise PocketopsError.new("Missing entry for '#{environment}': '#{key}' in pocketops.yml"))
     end
   end
 
