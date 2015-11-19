@@ -3,17 +3,20 @@
 Pocketops offers you to configure your vanilla Ubuntu box as a Rails
 server with deployment.
 
-After including pocketops in your Rails app, you will have two new Rake
-tasks that help you with your deployment.
+After including pocketops in your Rails app, you have the `pops` CLI
+to help you with your deployment.
 
 ```sh
-$ rake pops:setup
+$ pops init    # create a deploy user and lock down root
+$ pops install # install and configure packages
+$ pops deploy  # deploy current app
 ```
 
-and
-
+You can also control environment variables on the server (Heroku style):
 ```sh
-$ rake pops:deploy
+$ pops config:set RAILS_ENV=staging
+$ pops config:get
+$ pops config:unset UNUSED_VARIABLE
 ```
 
 ## Installation
@@ -21,7 +24,7 @@ $ rake pops:deploy
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'pocketops'
+gem 'pocketops', git: 'https://github.com/mpm/pocketops.git'
 ```
 
 And then execute:
@@ -42,9 +45,6 @@ environments:
   production:
     domain: example.com
     host: app1.example.com
-  staging:
-    domain: staging.example.com
-    host: staging1.example.com
 ```
 
 The `domain` setting is for the vhost config in nginx. `host` is the
@@ -56,14 +56,32 @@ public key authentication.
 Then, Pocketops will configure the server for you by running:
 
 ```sh
-$ rake pops:setup
+$ pops init
+$ pops install
 ```
 
 after this is done, deply your app with
 
 ```sh
-$ rake pops:deploy
+$ pops deploy
 ```
+
+## Status
+
+This is work in progress. The server setup might totally change before
+we approach version 1.0.0.
+
+## Plans/TODO
+
+* Use `foreman` to run a local `Procfile` instead of using passenger.
+* Install redis so sidekiq can be used.
+* Clean up current entanglement with rails_env
+* Clean up Ansible playbook, use consistent variable names and declare
+  dependencies.
+* More automation (`pops init` and `pops deploy` should be one task if
+  possible), detect custom playbooks in the Rails project automatically
+  (currently loadable with `pops custom`).
+* Better documentation
 
 ## Development
 
