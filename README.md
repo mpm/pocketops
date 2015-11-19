@@ -1,7 +1,7 @@
 # Pocketops
 
 Pocketops offers you to configure your vanilla Ubuntu box as a Rails
-server with deployment.
+server with deployment. Pocketops uses [Ansible](https://github.com/ansible/ansible) to configure your remote server.
 
 After including pocketops in your Rails app, you have the `pops` CLI
 to help you with your deployment.
@@ -21,7 +21,20 @@ $ pops config:unset UNUSED_VARIABLE
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Pocketops depends on Ansible, which needs to be installed separatly:
+
+Linux:
+
+Install Ansible with your distro's package manager, i.e. `apt-get install ansible`.
+
+On OS X run:
+
+```sh
+brew install ansible
+```
+
+Then head over to your Rails project and add this line to your
+application's Gemfile:
 
 ```ruby
 gem 'pocketops', git: 'https://github.com/mpm/pocketops.git'

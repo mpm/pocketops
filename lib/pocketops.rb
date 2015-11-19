@@ -13,11 +13,11 @@ require 'pocketops/cli'
 module Pocketops
   class PocketopsError < StandardError; end
 
-  if defined?(Rails)
-    class Railtie < Rails::Railtie
-      rake_tasks do
-        load 'tasks/pops.rake'
-      end
-    end
-  end
+  #if defined?(Rails)
+    #class Railtie < Rails::Railtie
+      #rake_tasks do
+        #load 'tasks/pops.rake'
+      #end
+    #end
+  #end
 end
