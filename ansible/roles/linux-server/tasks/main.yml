@@ -24,6 +24,8 @@
     - gawk
     - git-core
     - git
+    - imagemagick
+    - libmagickwand-dev
     - libxml2-dev
     - libffi-dev
     - libyaml-dev
