@@ -13,7 +13,7 @@ module Pocketops
           puts "Password: #{pw}"
           puts "(Store this password somewhere, its necessary to use sudo on the remote machine)"
         rescue PocketopsError => e
-          if e.to_s =~ /Host key verification failed/
+          if e.to_s =~ /Host key verification failed/ || e.to_s =~ /Permission denied/
             puts "FAILED"
             puts "I cannot log into the server as root. This is okay if you already ran 'pops init' earlier.\n" +
                  "This command is meant to be run once.\n" +
