@@ -4,6 +4,7 @@
   remote_user: "{{ deploy_user }}"
   roles:
     - linux-server
+    - swap
     - ufw
     - postgresql
     - rbenv
