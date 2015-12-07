@@ -5,6 +5,7 @@ server {
   passenger_enabled on;
   passenger_app_env {{ rails_env }};
   passenger_load_shell_envvars on;
+  passenger_log_file {{ app_path }}/shared/log/{{ rails_env }}.log
 
   gzip on;
   gzip_types text/plain text/html text/css application/x-javascript text/xml application/xml application/xml+rss text/javascript application/json;
