@@ -1,0 +1,7 @@
+- name: Download letsencrypt client
+  git: repo={{ letsencrypt_client_url }} dest={{ lets_encrypt_path }} version={{ letsencrypt_client_branch }} accept_hostkey=yes
+  sudo: yes
+
+- name: Installing letsencrypt-auto
+  command: /opt/letsencrypt/letsencrypt-auto --help
+  sudo: yes

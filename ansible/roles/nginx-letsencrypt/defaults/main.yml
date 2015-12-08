@@ -1,0 +1,5 @@
+---
+letsencrypt_path: /opt/letsencrypt
+letsencrypt_client_url: 'https://github.com/letsencrypt/letsencrypt'
+letsencrypt_client_branch: master
+
