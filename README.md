@@ -91,6 +91,7 @@ we approach version 1.0.0.
 * Clean up current entanglement with rails_env
 * Clean up Ansible playbook, use consistent variable names and declare
   dependencies.
+* Support letsencrypt automatic SSL certificate generation
 * Allow adding/removing keys from authorized_keys via `pops` CLI
 * More automation (`pops init` and `pops deploy` should be one task if
   possible), detect custom playbooks in the Rails project automatically
