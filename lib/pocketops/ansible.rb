@@ -1,3 +1,4 @@
+require 'open3'
 module Pocketops
   class Ansible
     attr_reader :executable
@@ -25,14 +26,23 @@ module Pocketops
        File.join(options[:path] || playbooks_path, playbook.to_s + '.yml'),
        options[:check] ? '--check' : nil,
       ].compact.join(' ')
-      result = `#{command}` #system(*command)
-      if $?.exitstatus != 0
+      exitstatus = nil
+      result = ''
+      Open3.popen2(command) do |stdin, stdout, wait_thr|
+        while line = stdout.gets do
+          process_output(line)
+          result += "#{line}\n"
+        end
+        exitstatus = wait_thr.value.exitstatus
+      end
+
+      if exitstatus != 0
         raise PocketopsError.new(
           ['Error running Ansible.',
            'Command line:',
            command,
            '',
-           "Exit status: #{$?}",
+           "Exit status: #{exitstatus}",
            '',
            'Output:',
            "#{result}"].join("\n"))
@@ -46,6 +56,13 @@ module Pocketops
     end
 
     private
+
+    def process_output(line)
+      if line =~ /^TASK:/
+        s = line.split('[').last.split(']').first
+        puts s
+      end
+    end
 
     def build_params(vars = {})
       Pocketops.config.ansible_vars.merge(vars).map { |key, value| "-e #{key}='#{value}'" }.join(' ')
