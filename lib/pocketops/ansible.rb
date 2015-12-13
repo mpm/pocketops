@@ -26,28 +26,23 @@ module Pocketops
        File.join(options[:path] || playbooks_path, playbook.to_s + '.yml'),
        options[:check] ? '--check' : nil,
       ].compact.join(' ')
-      exitstatus = nil
-      result = ''
+      p = Progress.new(options[:total_steps])
       Open3.popen2(command) do |stdin, stdout, wait_thr|
-        while line = stdout.gets do
-          process_output(line)
-          result += "#{line}\n"
-        end
-        exitstatus = wait_thr.value.exitstatus
+        p.parse(stdin, stdout, wait_thr)
       end
 
-      if exitstatus != 0
+      if p.exitstatus != 0
         raise PocketopsError.new(
           ['Error running Ansible.',
            'Command line:',
            command,
            '',
-           "Exit status: #{exitstatus}",
+           "Exit status: #{p.exitstatus}",
            '',
            'Output:',
-           "#{result}"].join("\n"))
+           "#{p.buffer}"].join("\n"))
       else
-        return true, result
+        return true, p.buffer
       end
     end
 
@@ -56,13 +51,6 @@ module Pocketops
     end
 
     private
-
-    def process_output(line)
-      if line =~ /^TASK:/
-        s = line.split('[').last.split(']').first
-        puts s
-      end
-    end
 
     def build_params(vars = {})
       Pocketops.config.ansible_vars.merge(vars).map { |key, value| "-e #{key}='#{value}'" }.join(' ')

@@ -26,6 +26,7 @@ module Pocketops
         env_file = Tempfile.new('pocketops-env')
         begin
           Pocketops.ansible.execute('configure',
+            total_steps: 4,
             vars: {env_config_key: key,
                    env_config_value: value,
                    dot_env_tmp: env_file.path})
