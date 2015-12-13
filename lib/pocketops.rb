@@ -9,6 +9,7 @@ require 'pocketops/ansible'
 require 'pocketops/inventory'
 require 'pocketops/commands'
 require 'pocketops/cli'
+require 'pocketops/progress'
 
 module Pocketops
   class PocketopsError < StandardError; end
