@@ -6,7 +6,7 @@ module Pocketops
         pw = Pocketops.config.generate_user_password
         print 'Creating deploy user and remove root access on remote server...'
         begin
-          Pocketops.ansible.execute('bootstrap')
+          Pocketops.ansible.execute('bootstrap', total_steps: 8)
           puts "OK"
           puts
           puts "I created a new user named 'rails'"
@@ -31,7 +31,7 @@ module Pocketops
         puts
         print 'Installing and configuring remote server (this will take a while)...'
         begin
-          Pocketops.ansible.execute('site', sudo_password: sudo_password)
+          Pocketops.ansible.execute('site', sudo_password: sudo_password, total_steps: 52)
           puts "OK"
           puts "Cool! You are now ready to deploy your app by running 'pops deploy'"
         rescue PocketopsError => e
