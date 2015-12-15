@@ -5,3 +5,4 @@ ufw_whitelisted_ipv6_addresses: [ ]
 ufw_whitelisted_ports:
   -  { port: 22,  protocol: tcp }
   -  { port: 80,  protocol: tcp }
+  -  { port: 443,  protocol: tcp }
