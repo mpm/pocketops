@@ -1,3 +1,4 @@
+require 'pty'
 module Pocketops
   class Progress
     attr_reader :buffer, :exitstatus
@@ -8,14 +9,24 @@ module Pocketops
       @buffer = ''
     end
 
-    def parse(stdin, stdout, wait_thr)
+    def execute(command)
       print_start
-      while line = stdout.gets do
+      begin
+        PTY.spawn(command) do |stdin, stdout, pid|
+          parse(stdin, stdout, pid)
+          Process.wait(pid)
+        end
+      rescue Errno::EIO
+      end
+      @exitstatus = $?
+      print_end
+    end
+
+    def parse(stdin, stdout, pid)
+      while line = stdin.gets do
         parse_line(line)
         @buffer += "#{line}\n"
       end
-      @exitstatus = wait_thr.value.exitstatus
-      print_end
     end
 
     private

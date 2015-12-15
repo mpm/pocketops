@@ -1,4 +1,3 @@
-require 'open3'
 module Pocketops
   class Ansible
     attr_reader :executable
@@ -27,9 +26,7 @@ module Pocketops
        options[:check] ? '--check' : nil,
       ].compact.join(' ')
       p = Progress.new(options[:total_steps])
-      Open3.popen2(command) do |stdin, stdout, wait_thr|
-        p.parse(stdin, stdout, wait_thr)
-      end
+      p.execute(command)
 
       if p.exitstatus != 0
         raise PocketopsError.new(

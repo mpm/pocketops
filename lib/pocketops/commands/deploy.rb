@@ -45,9 +45,8 @@ module Pocketops
       end
 
       def run
-        print "Deploying your application..."
-        Pocketops.ansible.execute('deploy')
-        puts "OK"
+        puts "Deploying your application:"
+        Pocketops.ansible.execute('deploy', total_steps: 12)
       end
     end
   end
