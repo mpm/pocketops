@@ -5,6 +5,11 @@ module Pocketops
       Commands::Deploy.run
     end
 
+    desc 'restart', 'restart the web server process'
+    def restart
+      Commands::Restart.run
+    end
+
     desc 'init', 'create a deploy user and remove SSH access to root on remote server (run this once before you do anything else)'
     def init
       Commands::Deploy.init
