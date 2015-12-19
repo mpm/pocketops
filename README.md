@@ -10,6 +10,7 @@ to help you with your deployment.
 $ pops init    # create a deploy user and lock down root
 $ pops install # install and configure packages
 $ pops deploy  # deploy current app
+$ pops restart # restart passenger process (after updating env variables, etc.)
 ```
 
 You can also control environment variables on the server (Heroku style):
