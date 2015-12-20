@@ -9,7 +9,7 @@ module Pocketops
       @environment = environment
       config_file = File.join(root, 'config', 'pocketops.yml')
       if !File.exists?(config_file)
-        # TODO: offer a generator to create this file.
+        # TODO: Ask for server name here and generate the config file in place
         raise PocketopsError.new('config/pocketops.yml not found in your Rails project. Please read the gem documentation.')
       end
       @settings = YAML.load_file(config_file)
