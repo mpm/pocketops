@@ -7,6 +7,9 @@ module Pocketops
 
     def initialize(environment)
       @environment = environment
+      if !Dir.exists?(File.join(root, 'config'))
+        raise PocketopsError.new('No config folder in the current directory. Make sure to run Pocketops inside the root folder of your Rails application!')
+      end
       config_file = File.join(root, 'config', 'pocketops.yml')
       if !File.exists?(config_file)
         raise PocketopsError.new('config/pocketops.yml not found in your Rails project. Please read the gem documentation.')
