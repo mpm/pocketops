@@ -11,9 +11,7 @@ module Pocketops
         raise PocketopsError.new('No config folder in the current directory. Make sure to run Pocketops inside the root folder of your Rails application!')
       end
       config_file = File.join(root, 'config', 'pocketops.yml')
-      if !File.exists?(config_file)
-        raise PocketopsError.new('config/pocketops.yml not found in your Rails project. Please read the gem documentation.')
-      end
+      ConfigGenerator.ask(config_file) if !File.exists?(config_file)
       @settings = YAML.load_file(config_file)
       @ansible_vars = {
         app_name: guess_app_name,
