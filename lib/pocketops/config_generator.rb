@@ -2,6 +2,12 @@ module Pocketops
   module ConfigGenerator
     extend self
     def ask(configfile)
+      git_default = `git remote -v | grep origin`
+      if $? != 0
+        raise PocketopsError.new('No git remotes found in current directory. Make sure your project directory is a valid git repository with a remote accessible over the internet.')
+      end
+      git_default = git_default.split(' ')[1]
+
       puts 'No config/pocketops.yml file found.'
       puts 'I will ask you some questions to create one for you. Hit enter to use the suggested default value in square brackets [].'
       puts
@@ -10,9 +16,7 @@ module Pocketops
       host = read_input
       print "Domain name to serve the website under [#{host}]: "
       domain = read_input(host)
-      git_default = `git remote -v | grep origin`
-      # TODO error handling
-      git_default = git_default.split(' ')[1]
+      raise PocketopsError.new('No config folder in the current directory. Make sure to run Pocketops inside the root folder of your Rails application!')
       print "Repository url of your project [#{git_default}]: "
       git_url = read_input(git_default)
       config = {
