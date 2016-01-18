@@ -65,8 +65,8 @@ http {
 	passenger_root /usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini;
 	passenger_ruby /home/{{ deploy_user }}/.rbenv/versions/{{ ruby_version }}/bin/ruby;
 
-  # FIXME: does not work with multiple apps beeing deployed
-  passenger_log_file {{ app_path }}/shared/log/{{ rails_env }}.log
+	# FIXME: does not work with multiple apps beeing deployed
+	passenger_log_file {{ app_path }}/shared/log/{{ rails_env }}.log;
 
 	##
 	# Virtual Host Configs
