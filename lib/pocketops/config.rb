@@ -1,3 +1,5 @@
+require 'unix_crypt'
+
 module Pocketops
   class Config
     attr_reader :settings,
@@ -39,7 +41,7 @@ module Pocketops
     def generate_user_password
       dict = [(0..9), ('a'..'z'), ('A'..'Z')].map(&:to_a).flatten
       @password = (1..15).map { dict.sample }.join
-      @ansible_vars['password'] = password.crypt("$6$#{rand}$")
+      @ansible_vars['password'] = UnixCrypt::SHA512.build(@password, rand.to_s[0..15])
       @password
     end
 
