@@ -46,7 +46,8 @@ module Pocketops
 
       def run
         puts "Deploying your application:"
-        Pocketops.ansible.execute('deploy', total_steps: 12)
+        release_date = Time.new.strftime('%Y%m%d%H%M%S')
+        Pocketops.ansible.execute('deploy', total_steps: 12, vars: {release_date: release_date})
       end
     end
   end

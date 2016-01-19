@@ -2,7 +2,7 @@
 #- include_vars: ../../unicorn/defaults/main.yml
 #- include_vars: ../../sidekiq/defaults/main.yml
 
-- set_fact: this_release_path={{ releases_path }}/{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}
+- set_fact: this_release_path={{ releases_path }}/{{ release_date }}
 
 - name: Create shared directories
   file: path={{ shared_path }}/{{ item }} state=directory
