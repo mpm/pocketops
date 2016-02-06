@@ -16,16 +16,15 @@ module Pocketops
       host = read_input
       print "Domain name to serve the website under [#{host}]: "
       domain = read_input(host)
-      raise PocketopsError.new('No config folder in the current directory. Make sure to run Pocketops inside the root folder of your Rails application!')
       print "Repository url of your project [#{git_default}]: "
       git_url = read_input(git_default)
       config = {
-        git_url: git_url,
-        git_branch: 'master',
-        environments: {
-          production: {
-            domain: domain,
-            host: host
+        'git_url' => git_url,
+        'git_branch' => 'master',
+        'environments' => {
+          'production' => {
+            'domain' => domain,
+            'host' => host
           }
         }
       }

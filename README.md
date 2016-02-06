@@ -47,30 +47,24 @@ And then execute:
 
 ## Usage
 
-Create `config/pocketops.yml` in your Rails project.
+Run
 
-Example:
-
-```yaml
----
-git_url: git@github.com:your-organization/your-application.git
-git_branch: master
-environments:
-  production:
-    domain: example.com
-    host: app1.example.com
+```sh
+$ pops init
 ```
 
-The `domain` setting is for the vhost config in nginx. `host` is the
-hostname of your server (you should be able to SSH into `host`).
+Which will guide you though creating `config/pocketops.yml`.
 
 You need a server with Ubuntu 14.04 where you can log into as `root` via
 public key authentication.
 
+Pocketops will lock down ssh login for the root user and create a
+`rails` user with sudo privilegs. Store the sudo password somewhere
+(you'll need it in the next step).
+
 Then, Pocketops will configure the server for you by running:
 
 ```sh
-$ pops init
 $ pops install
 ```
 
@@ -107,5 +101,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/pocketops. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/mpm/pocketops. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
