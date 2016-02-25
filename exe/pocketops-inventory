@@ -1,5 +1,0 @@
-#!/usr/bin/env ruby
-require 'pocketops'
-
-inventory = Pocketops::Inventory.new(Pocketops.config.hosts)
-puts inventory.to_json
